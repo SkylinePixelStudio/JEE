@@ -1,1 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JEE Advanced - Complex Numbers</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;500;600;700&family=Fira+Code&display=swap" rel="stylesheet">
+  
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --primary: #1a237e;
+      --secondary: #3949ab;
+      --accent: #ff6f00;
+      --bg-light: #f5f7fa;
+      --bg-white: #ffffff;
+      --text-dark: #212121;
+      --text-muted: #616161;
+      --border-color: #e0e0e0;
+      --success: #2e7d32;
+      --shadow: 0 2px 12px rgba(0,0,0,0.08);
+      --radius: 12px;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 30px 20px;
+      color: var(--text-dark);
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      background: var(--bg-white);
+      border-radius: 24px;
+      box-shadow: 0 25px 80px rgba(0,0,0,0.25);
+      overflow: hidden;
+    }
+
+    /* Header */
+    .header {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      color: white;
+      padding: 45px 50px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .header::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -20%;
+      width: 400px;
+      height: 400px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 50%;
+    }
+
+    .header::after {
+      content: '';
+      position: absolute;
+      bottom: -30%;
+      left: -10%;
+      width: 300px;
+      height: 300px;
+      background: rgba(255,255,255,0.03);
+      border-radius: 50%;
+    }
+
+    .badge {
+      display: inline-block;
+      background: rgba(255,255,255,0.2);
+      backdrop-filter: blur(10px);
+      padding: 8px 20px;
+      border-radius: 50px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+      border: 1px solid rgba(255,255,255,0.3);
+    }
+
+    .header h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.8rem;
+      margin-bottom: 12px;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+
+    .header .subtitle {
+      font-size: 1.15rem;
+      opacity: 0.92;
+      font-weight: 400;
+    }
+
+    /* Content */
+    .content {
+      padding: 40px 50px;
+    }
+
+    .section {
+      margin-bottom: 45px;
+    }
+
+    .section:last-child {
+      margin-bottom: 0;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 22px;
+      padding-bottom: 14px;
+      border-bottom: 3px solid var(--primary);
+    }
+
+    .section-number {
+      width: 42px;
+      height: 42px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+
+    .section-title {
+      font-size: 1.55rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    /* Theory Section */
+    .theory-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(480px, 1fr));
+      gap: 16px;
+    }
+
+    .theory-item {
+      background: var(--bg-light);
+      padding: 18px 22px;
+      border-radius: var(--radius);
+      border-left: 4px solid var(--accent);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .theory-item:hover {
+      transform: translateX(5px);
+      box-shadow: var(--shadow);
+    }
+
+    .theory-item strong {
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    /* Formula Box */
+    .formula-box {
+      background: linear-gradient(135deg, #faf5ff 0%, #f0e7ff 100%);
+      border: 2px solid #d4c4fb;
+      border-radius: var(--radius);
+      padding: 28px;
+      overflow-x: auto;
+    }
+
+    .formula-box mjx-container {
+      margin: 8px 0 !important;
+    }
+
+    /* Solved Examples */
+    .example-card {
+      background: white;
+      border: 2px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 26px;
+      margin-bottom: 22px;
+      transition: border-color 0.3s ease;
+    }
+
+    .example-card:hover {
+      border-color: var(--secondary);
+    }
+
+    .example-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .example-badge {
+      background: var(--accent);
+      color: white;
+      padding: 5px 14px;
+      border-radius: 6px;
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+
+    .question-text {
+      background: var(--bg-light);
+      padding: 18px;
+      border-radius: 8px;
+      margin-bottom: 18px;
+      font-size: 0.98rem;
+      border-left: 4px solid var(--accent);
+    }
+
+    .solution-box {
+      background: #f8fdf8;
+      border: 1px solid #c8e6c9;
+      border-radius: 8px;
+      padding: 18px;
+    }
+
+    .solution-label {
+      color: var(--success);
+      font-weight: 700;
+      font-size: 0.88rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 10px;
+    }
+
+    .answer-highlight {
+      background: linear-gradient(135deg, var(--success), #43a047);
+      color: white;
+      padding: 12px 20px;
+      border-radius: 8px;
+      margin-top: 14px;
+      font-weight: 700;
+      display: inline-block;
+    }
+
+    /* MCQ Styles */
+    .mcq-container {
+      background: white;
+      border: 2px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+
+    .mcq-question {
+      font-weight: 600;
+      font-size: 1.02rem;
+      margin-bottom: 16px;
+      color: var(--text-dark);
+      line-height: 1.55;
+    }
+
+    .options-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+
+    .option-item {
+      background: var(--bg-light);
+      padding: 12px 16px;
+      border-radius: 8px;
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 0.95rem;
+    }
+
+    .option-item:hover {
+      border-color: var(--secondary);
+      background: #e8eaf6;
+    }
+
+    .option-letter {
+      font-weight: 700;
+      color: var(--primary);
+      margin-right: 8px;
+    }
+
+    .mcq-type {
+      display: inline-block;
+      background: var(--secondary);
+      color: white;
+      padding: 4px 12px;
+      border-radius: 4px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      margin-left: 10px;
+    }
+
+    .mcq-type.multi {
+      background: var(--accent);
+    }
+
+    /* Numerical */
+    .numerical-card {
+      background: linear-gradient(135deg, #fff8e1 0%, #ffecb3 100%);
+      border: 2px solid #ffd54f;
+      border-radius: var(--radius);
+      padding: 24px;
+      margin-bottom: 18px;
+    }
+
+    .numerical-badge {
+      background: #f57c00;
+      color: white;
+      padding: 5px 14px;
+      border-radius: 6px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      display: inline-block;
+      margin-bottom: 14px;
+    }
+
+    /* Answer Key */
+    .answer-key {
+      background: #263238;
+      color: white;
+      border-radius: var(--radius);
+      padding: 28px;
+      overflow-x: auto;
+    }
+
+    .answer-key pre {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.85rem;
+      line-height: 1.65;
+      color: #aed581;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+
+    /* Footer */
+    .footer {
+      background: var(--bg-light);
+      padding: 22px 50px;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      border-top: 1px solid var(--border-color);
+    }
+
+    @media (max-width: 768px) {
+      body { padding: 15px 10px; }
+      .header { padding: 30px 25px; }
+      .header h1 { font-size: 2rem; }
+      .content { padding: 25px 20px; }
+      .theory-grid { grid-template-columns: 1fr; }
+      .options-grid { grid-template-columns: 1fr; }
+      .footer { padding: 18px 20px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    
+    <!-- Header -->
+    <div class="header">
+      <span class="badge">📐 JEE Advanced Mathematics</span>
+      <h1>Complex Numbers</h1>
+      <p class="subtitle">Complete Module — Theory, Formulas, Solved Problems & Practice</p>
+    </div>
+
+    <!-- Content -->
+    <div class="content">
+
+      <!-- Section 1: Theory -->
+      <div class="section">
+        <div class="section-header">
+          <div class="section-number">1</div>
+          <h2 class="section-title">Theory</h2>
+        </div>
+        <div class="theory-grid">
+          <div class="theory-item"><strong>Definition:</strong> A complex number $z = x + iy$, where $x \in \mathbb{R}$ (real part) and $y \in \mathbb{R}$ (imaginary part), and $i = \sqrt{-1}$ with $i^2 = -1$.</div>
+          
+          <div class="theory-item"><strong>Polar Form:</strong> $z = r(\cos\theta + i\sin\theta)$, where $r = |z| = \sqrt{x^2 + y^2}$ (modulus) and $\theta = \arg(z) = \tan^{-1}(y/x)$ (argument).</div>
+          
+          <div class="theory-item"><strong>Euler's Form:</strong> $z = re^{i\theta}$, where $e^{i\theta} = \cos\theta + i\sin\theta$. Connects exponential and trigonometric representations.</div>
+          
+          <div class="theory-item"><strong>Conjugate:</strong> If $z = x + iy$, then $\bar{z} = x - iy$. Key property: $z \cdot \bar{z} = |z|^2$. Also $z + \bar{z} = 2\text{Re}(z)$ and $z - \bar{z} = 2i\text{Im}(z)$.</div>
+          
+          <div class="theory-item"><strong>Modulus Properties:</strong> $|z_1 \cdot z_2| = |z_1| \cdot |z_2|$, $|z_1/z_2| = |z_1|/|z_2|$, Triangle Inequality: $||z_1|-|z_2|| \leq |z_1 \pm z_2| \leq |z_1| + |z_2|$.</div>
+          
+          <div class="theory-item"><strong>De Moivre's Theorem:</strong> $(\cos\theta + i\sin\theta)^n = \cos(n\theta) + i\sin(n\theta)$ for any rational $n$. Essential for finding powers and roots.</div>
+          
+          <div class="theory-item"><strong>nth Roots of Unity:</strong> Solutions of $z^n = 1$ are $z_k = e^{2\pi ik/n} = \cos(2\pi k/n) + i\sin(2\pi k/n)$ for $k = 0, 1, \ldots, n-1$. Sum of all roots $= 0$ (for $n > 1$).</div>
+          
+          <div class="theory-item"><strong>Locus:</strong> $|z - z_0| = r$ → Circle (center $z_0$, radius $r$); $|z - z_1| = |z - z_2|$ → Perpendicular bisector; $\arg(z - z_0) = \alpha$ → Ray from $z_0$ at angle $\alpha$.</div>
+          
+          <div class="theory-item"><strong>Rotation:</strong> Multiplying $z$ by $e^{i\alpha}$ rotates $z$ counter-clockwise by angle $\alpha$ about origin without changing magnitude.</div>
+          
+          <div class="theory-item"><strong>Important Values:</strong> $i^{4n}=1$, $i^{4n+1}=i$, $i^{4n+2}=-1$, $i^{4n+3}=-i$. Also $(1+i)^2 = 2i$, $(1-i)^2 = -2i$, $\frac{1+i}{1-i}=i$.</div>
+        </div>
+      </div>
+
+      <!-- Section 2: Formula Sheet -->
+      <div class="section">
+        <div class="section-header">
+          <div class="section-number">2</div>
+          <h2 class="section-title">Formula Sheet</h2>
+        </div>
+        <div class="formula-box">
+          $$\begin{aligned}
+          &\textbf{Basic Operations:} && z_1 \pm z_2 = (x_1 \pm x_2) + i(y_1 \pm y_2) \\[6pt]
+          & && z_1 \cdot z_2 = (x_1x_2 - y_1y_2) + i(x_1y_2 + x_2y_1) \\[6pt]
+          & && \frac{z_1}{z_2} = \frac{z_1 \cdot \bar{z}_2}{|z_2|^2} \quad (z_2 \neq 0) \\[12pt]
+          &\textbf{Modulus \& Argument:} && |z| = \sqrt{x^2 + y^2}, \quad \arg(z) = \tan^{-1}\!\left(\frac{y}{x}\right) \\[6pt]
+          & && |z|^2 = z \cdot \bar{z}, \quad \arg(\bar{z}) = -\arg(z) \\[12pt]
+          &\textbf{De Moivre's Theorem:} && (\cos\theta + i\sin\theta)^n = \cos(n\theta) + i\sin(n\theta) \\[12pt]
+          &\textbf{Euler's Formula:} && e^{i\theta} = \cos\theta + i\sin\theta, \quad e^{-i\theta} = \cos\theta - i\sin\theta \\[6pt]
+          & && \cos\theta = \frac{e^{i\theta}+e^{-i\theta}}{2}, \quad \sin\theta = \frac{e^{i\theta}-e^{-i\theta}}{2i} \\[12pt]
+          &\textbf{nth Roots of } z = r(\cos\theta + i\sin\theta): && z_k = r^{1/n}\!\left[\cos\!\left(\frac{\theta+2k\pi}{n}\right) + i\sin\!\left(\frac{\theta+2k\pi}{n}\right)\right] \\[12pt]
+          &\textbf{Triangle Inequality:} && ||z_1|-|z_2|| \leq |z_1 \pm z_2| \leq |z_1| + |z_2| \\[12pt]
+          &\textbf{Cube Roots of Unity:} && 1 + \omega + \omega^2 = 0, \quad \omega^3 = 1, \quad \omega^2 = \bar{\omega}
+          \end{aligned}$$
+        </div>
+      </div>
+
+      <!-- Section 3: Solved Examples -->
+      <div class="section">
+        <div class="section-header">
+          <div class="section-number">3</div>
+          <h2 class="section-title">Solved Examples</h2>
+        </div>
+
+        <div class="example-card">
+          <div class="example-header">
+            <span class="example-badge">Problem 1</span>
+            <span style="color: var(--text-muted); font-size: 0.9rem;">Modulus & Argument</span>
+          </div>
+          <div class="question-text">
+            <strong>Q.</strong> Find the modulus and principal argument of $z = \dfrac{(1+i)^3(1+\sqrt{3}i)}{(1-i\sqrt{3})(-1+i)}$
+          </div>
+          <div class="solution-box">
+            <div class="solution-label">📝 Solution</div>
+            Converting to polar form:<br><br>
+            $1+i = \sqrt{2}\,e^{i\pi/4}$, so $(1+i)^3 = 2\sqrt{2}\,e^{i3\pi/4}$<br>
+            $1+\sqrt{3}i = 2\,e^{i\pi/3}$<br>
+            $1-i\sqrt{3} = 2\,e^{-i\pi/3}$<br>
+            $-1+i = \sqrt{2}\,e^{i3\pi/4}$<br><br>
+            $$z = \frac{2\sqrt{2} \cdot 2}{2 \cdot \sqrt{2}} \cdot \frac{e^{i(3\pi/4 + \pi/3)}}{e^{i(-\pi/3 + 3\pi/4)}} = 2 \cdot e^{i(2\pi/3)}$$
+            <div class="answer-highlight">$|z| = 2$, $\arg(z) = \dfrac{2\pi}{3}$</div>
+          </div>
+        </div>
+
+        <div class="example-card">
+          <div class="example-header">
+            <span class="example-badge">Problem 2</span>
+            <span style="color: var(--text-muted); font-size: 0.9rem;">Locus Problem</span>
+          </div>
+          <div class="question-text">
+            <strong>Q.</strong> If $|z-1| + |z+1| = 4$, find the maximum value of $|z|$.
+          </div>
+          <div class="solution-box">
+            <div class="solution-label">📝 Solution</div>
+            The equation represents an ellipse with foci at $z = 1$ and $z = -1$.<br><br>
+            Sum of distances $= 2a = 4 \Rightarrow a = 2$<br>
+            Distance between foci $= 2c = 2 \Rightarrow c = 1$<br>
+            Using $b^2 = a^2 - c^2$: $b^2 = 4 - 1 = 3$<br><br>
+            Maximum $|z|$ occurs at vertex on major axis: $\max|z| = a = 2$<br>
+            <em>Verification:</em> At $z = 2$: $|2-1| + |2+1| = 1 + 3 = 4$ ✓
+            <div class="answer-highlight">Maximum value of $|z| = 2$</div>
+          </div>
+        </div>
+
+        <div class="example-card">
+          <div class="example-header">
+            <span class="example-badge">Problem 3</span>
+            <span style="color: var(--text-muted); font-size: 0.9rem;">Roots of Unity</span>
+          </div>
+          <div class="question-text">
+            <strong>Q.</strong> Find the value of $\omega^{2023} + \omega^{2024} + \omega^{2025}$ where $\omega$ is a non-real cube root of unity.
+          </div>
+          <div class="solution-box">
+            <div class="solution-label">📝 Solution</div>
+            Since $\omega$ is a non-real cube root of unity: $\omega^3 = 1$ and $1 + \omega + \omega^2 = 0$<br><br>
+            Reducing exponents modulo 3:<br>
+            • $2023 = 3 \times 674 + 1 \Rightarrow \omega^{2023} = \omega$<br>
+            • $2024 = 3 \times 674 + 2 \Rightarrow \omega^{2024} = \omega^2$<br>
+            • $2025 = 3 \times 675 + 0 \Rightarrow \omega^{2025} = 1$<br><br>
+            $$\omega^{2023} + \omega^{2024} + \omega^{2025} = \omega + \omega^2 + 1 = 0$$
+            <div class="answer-highlight">Answer: $0$</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 4: MCQs -->
+      <div class="section">
+        <div class="section-header">
+          <div class="section-number">4</div>
+          <h2 class="section-title">Multiple Choice Questions</h2>
+        </div>
+
+        <p style="margin-bottom: 20px; color: var(--text-muted);"><strong style="color: var(--primary);">Single Correct</strong> (Questions 1–5)</p>
+
+        <div class="mcq-container">
+          <div class="mcq-question"><strong>Q1.</strong> If $z = \dfrac{1+7i}{(2-i)^2}$, then $\arg(z)$ equals: <span class="mcq-type">Single</span></div>
+          <div class="options-grid">
+            <div class="option-item"><span class="option-letter">(A)</span> $\dfrac{\pi}{4}$</div>
+            <div class="option-item"><span class="option-letter">(B)</span> $\dfrac{3\pi}{4}$</div>
+            <div class="option-item"><span class="option-letter">(C)</span> $-\dfrac{\pi}{4}$</div>
+            <div class="option-item"><span class="option-letter">(D)</span> $-\dfrac{3\pi}{4}$</div>
+          </div>
+        </div>
+
+        <div class="mcq-container">
+          <div class="mcq-question"><strong>Q2.</strong> The least positive integer $n$ for which $\left(\dfrac{1+i}{1-i}\right)^n$ is real, is: <span class="mcq-type">Single</span></div>
+          <div class="options-grid">
+            <div class="option-item"><span class="option-letter">(A)</span> 2</div>
+            <div class="option-item"><span class="option-letter">(B)</span> 4</div>
+            <div class="option-item"><span class="option-letter">(C)</span> 8</div>
+            <div class="option-item"><span class="option-letter">(D)</span> 16</div>
+          </div>
+        </div>
+
+        <div class="mcq-container">
+          <div class="mcq-question"><strong>Q3.</strong> If $|z - 3 + 2i| \leq 4$, then the difference between the maximum and minimum values of $|z + 1 + 2i|$ is: <span class="mcq-type">Single</span></div>
+          <div class="options-grid">
+            <div class="option-item"><span class="option-letter">(A)</span> 4</div>
+            <div class="option-item"><span class="option-letter">(B)</span> 6</div>
+            <div class="option-item"><span class="option-letter">(C)</span> 8</div>
+            <div class="option-item"><span class="option-letter">(D)</span> 10</div>
+          </div>
+        </div>
+
+        <div class="mcq-container">
+          <div class="mcq-question"><strong>Q4.</strong> If $|z_1| < 1 < |z_2|$, then $z - z_1 = \lambda(z - z_2)$ ($\lambda \in \mathbb{R}, \lambda \neq 1$) represents: <span class="mcq-type">Single</span></div>
+          <div class="options-grid">
+            <div class="option-item"><span class="option-letter">(A)</span> Line through origin</div>
+            <div class="option-item"><span class="option-letter">(B)</span> A circle</div>
+            <div class="option-item"><span class="option-letter">(C)</span> Line not through origin</div>
+            <div class="option-item"><span class="option-letter">(D)</span> None of these</div>
+          </div>
+        </div>
+
+        <div class="mcq-container">
+          <div class="mcq-question"><strong>Q5.</strong> $\displaystyle\sum_{r=1}^{11} \left[\sin\left(\dfrac{2r\pi}{11}\right) + i\cos\left(\dfrac{2r\pi}{11}\right)\right]$ equals: <span class="mcq-type">Single</span></div>
+          <div class="options-grid">
+            <div class="option-item"><span class="option-letter">(A)</span> $-1$</div>
+            <div class="option-item"><span class="option-letter">(B)</span> $0$</div>
+            <div class="option-item"><span class="option-letter">(C)</span> $i$</div>
+            <div class="option-item"><span class="option-letter">(D)</span> $-i$</div>
+          </div>
+        </div>
+
+        <p style="margin: 28px 0 20px; color: var(--text-muted);"><strong style="color: var(--accent);">Multiple Correct</strong> (Questions 6–8)</p>
+
+        <div class="mcq-container">
+          <div class="mcq-question"><strong>Q6.</strong> Which of the following statements are TRUE? <span class="mcq-type multi">Multi</span></div>
+          <div class="options-grid" style="grid-template-columns: 1fr;">
+            <div class="option-item"><span class="option-letter">(A)</span> Locus of $|z - 1| = |z + i|$ is the line $x + y = 0$</div>
+            <div class="option-item"><span class="option-letter">(B)</span> If $\arg\left(\dfrac{z-1}{z+1}\right) = \dfrac{\pi}{4}$, then locus of $z$ is a circle</div>
+            <div class="option-item"><span class="option-letter">(C)</span> $|z_1 + z_2|^2 + |z_1 - z_2|^2 = 2(|z_1|^2 + |z_2|^2)$ for all $z_1, z_2$</div>
+            <div class="option-item"><span class="option-letter">(D)</span> If $|z| = 1$ and $\arg(z) = \theta$, then $\arg\left(\dfrac{1+z}{1-z}\right) = \dfrac{\theta}{2}$</div>
+          </div>
+        </div>
+
+        <div class="mcq-container">
+          <div class="mcq-question"><strong>Q7.</strong> Let $\omega$ be a non-real cube root of unity. Which of the following equal zero? <span class="mcq-type multi">Multi</span></div>
+          <div class="options-grid" style="grid-template-columns: 1fr;">
+            <div class="option-item"><span class="option-letter">(A)</span> $1 + \omega + \omega^2$</div>
+            <div class="option-item"><span class="option-letter">(B)</span> $\omega^{10} + \omega^{20} + \omega^{30}$</div>
+            <div class="option-item"><span class="option-letter">(C)</span> $(1 - \omega)(1 - \omega^2)(1 - \omega^4)(1 - \omega^5)$</div>
+            <div class="option-item"><span class="option-letter">(D)</span> $\omega^{100} + \omega^{200} + \omega^{300}$</div>
+          </div>
+        </div>
+
+        <div class="mcq-container">
+          <div class="mcq-question"><strong>Q8.</strong> If $z = x + iy$ satisfies $|z + 4| = |z - 4|$, then: <span class="mcq-type multi">Multi</span></div>
+          <div class="options-grid">
+            <div class="option-item"><span class="option-letter">(A)</span> $z$ lies on imaginary axis</div>
+            <div class="option-item"><span class="option-letter">(B)</span> $z$ lies on real axis</div>
+            <div class="option-item"><span class="option-letter">(C)</span> $\text{Re}(z) = 0$</div>
+            <div class="option-item"><span class="option-letter">(D)</span> $\text{Im}(z) = 0$</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 5: Numerical Problems -->
+      <div class="section">
+        <div class="section-header">
+          <div class="section-number">5</div>
+          <h2 class="section-title">Numerical Problems</h2>
+        </div>
+
+        <div class="numerical-card">
+          <span class="numerical-badge">Numerical N1</span>
+          <p style="font-size: 1.02rem; margin-bottom: 12px;"><strong>If $z = \cos\theta + i\sin\theta$, find the value of $\displaystyle\sum_{m=1}^{15} \text{Im}(z^m)$ when $\theta = \dfrac{2\pi}{15}$. (Enter integer answer)</strong></p>
+          <p style="color: var(--text-muted); font-size: 0.92rem;">💡 Hint: Use geometric series and properties of roots of unity.</p>
+        </div>
+
+        <div class="numerical-card">
+          <span class="numerical-badge">Numerical N2</span>
+          <p style="font-size: 1.02rem; margin-bottom: 12px;"><strong>Let $z_k$ ($k = 0, 1, 2, \ldots, 9$) be all the 10th roots of unity. Find $\displaystyle\prod_{k=0}^{9} (2 - z_k)$. (Enter integer answer)</strong></p>
+          <p style="color: var(--text-muted); font-size: 0.92rem;">💡 Hint: Use the fact that $\prod_{k=0}^{n-1}(x - z_k) = x^n - 1$.</p>
+        </div>
+      </div>
+
+      <!-- Section 6: Answer Key -->
+      <div class="section">
+        <div class="section-header">
+          <div class="section-number">6</div>
+          <h2 class="section-title">Answer Key</h2>
+        </div>
+        <div class="answer-key">
+<pre>{
+  <span style="color:#81d4fa">"single_correct"</span>: {
+    <span style="color:#81d4fa">"Q1"</span>: <span style="color:#fff59d">"C"</span>,   <span style="color:#616161">// arg(z) = -π/4 after simplification</span>
+    <span style="color:#81d4fa">"Q2"</span>: <span style="color:#fff59d">"A"</span>,   <span style="color:#616161">// (1+i)/(1-i) = i, least n with i^n real is 2</span>
+    <span style="color:#81d4fa">"Q3"</span>: <span style="color:#fff59d">"C"</span>,   <span style="color:#616161">// Max=8, Min=0, Difference=8</span>
+    <span style="color:#81d4fa">"Q4"</span>: <span style="color:#fff59d">"C"</span>,   <span style="color:#616161">// Represents line through z₁, z₂ (not through origin)</span>
+    <span style="color:#81d4fa">"Q5"</span>: <span style="color:#fff59d">"D"</span>    <span style="color:#616161">// Sum evaluates to -i</span>
+  },
+  <span style="color:#81d4fa">"multiple_correct"</span>: {
+    <span style="color:#81d4fa">"Q6"</span>: [<span style="color:#fff59d">"B"</span>, <span style="color:#fff59d">"C"</span>],
+    <span style="color:#81d4fa">"Q7"</span>: [<span style="color:#fff59d">"A"</span>, <span style="color:#fff59d">"B"</span>, <span style="color:#fff59d">"C"</span>, <span style="color:#fff59d">"D"</span>],  <span style="color:#616161">// All equal zero</span>
+    <span style="color:#81d4fa">"Q8"</span>: [<span style="color:#fff59d">"A"</span>, <span style="color:#fff59d">"C"</span>]   <span style="color:#616161">// Perpendicular bisector → imaginary axis</span>
+  },
+  <span style="color:#81d4fa">"numerical"</span>: {
+    <span style="color:#81d4fa">"N1"</span>: <span style="color:#fff59d">0</span>,
+    <span style="color:#81d4fa">"N2"</span>: <span style="color:#fff59d">1023</span>  <span style="color:#616161">// = 2¹⁰ - 1</span>
+  }
+}</pre>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <p><strong>JEE Advanced Mathematics Module — Complex Numbers</strong></p>
+      <p style="margin-top: 6px; font-size: 0.85rem;">Covering Algebraic, Polar, Euler Forms | De Moivre's Theorem | Roots of Unity | Locus Problems</p>
+    </div>
+
+  </div>
+</body>
+</html>
